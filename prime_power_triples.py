@@ -14,7 +14,8 @@
 # How many numbers below fifty million can be expressed as the sum of a prime
 # square, prime cube, and prime fourth power?
 
-from itertools import takewhile, izip
+from math import sqrt
+from itertools import takewhile, izip, imap
 
 from functools import wraps
 from time import time
@@ -24,31 +25,32 @@ class PrimePowerTriples(object):
     def __init__(self, limit_num):
         self.limit_num = limit_num
 
-        self.primes = [2]
+        primes = self.get_primes()
 
-        valid_primes = takewhile(lambda n: (n * n) < self.limit_num, xrange(3, self.limit_num, 2))
+        squares = filter(self.limit_filter, imap(lambda p: p * p, primes))
 
-        for p in valid_primes:
-            if not any([p % x == 0 for x in self.primes]):
-                self.primes.append(p)
+        cubes = filter(self.limit_filter, imap(lambda (p, ps): p * ps, izip(primes, squares)))
 
-        self.prime_squares = filter(self.limit_filter, [p * p
-                                                        for p in self.primes])
+        fourth_powers = filter(self.limit_filter, imap(lambda ps: ps * ps, squares))
 
-        self.prime_cubes = filter(self.limit_filter, [p * ps
-                                                      for p, ps in izip(self.primes, self.prime_squares)])
+        self.valid_sums = set(fp + c + s
+                              for fp in fourth_powers
+                              for c in takewhile(lambda pc: self.limit_filter(fp + pc), cubes)
+                              for s in takewhile(lambda ps: self.limit_filter(fp + c + ps), squares))
 
-        self.prime_fourth_powers = filter(self.limit_filter, [ps * ps
-                                                              for ps in self.prime_squares])
+    def get_primes(self):
+        primes = [2]
+
+        num_max = int(sqrt(self.limit_num)) + 1
+
+        for p in xrange(3, num_max, 2):
+            if all((p % x for x in primes)):
+                primes.append(p)
+
+        return primes
 
     def limit_filter(self, n):
         return n < self.limit_num
-
-    def get_unique_power_triples(self):
-        return set([fp + c + s
-                    for fp in self.prime_fourth_powers
-                    for c in takewhile(lambda pc: (fp + pc) < self.limit_num, self.prime_cubes)
-                    for s in takewhile(lambda ps: (fp + c + ps) < self.limit_num, self.prime_squares)])
 
 
 def time_it(func):
@@ -58,19 +60,17 @@ def time_it(func):
         ret_value = func(*args, **kwargs)
         end = time()
 
-        time_taken = end - start
-        return ret_value, time_taken
+        duration = end - start
+        return ret_value, duration
 
     return wrapper
 
 
 @time_it
 def prime_power_triples_count():
-    fifty = 50
-    fifty_million = fifty * 1000 * 1000
+    fifty_million = 50 * 1000 * 1000
 
-    pt_set = PrimePowerTriples(fifty_million).get_unique_power_triples()
-    return len(pt_set)
+    return len(PrimePowerTriples(fifty_million).valid_sums)
 
 # main()
 answer, time_taken = prime_power_triples_count()
