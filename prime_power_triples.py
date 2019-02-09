@@ -30,13 +30,13 @@ class PrimePowerTriples(object):
         primes = self.get_primes()
 
         squares = [num * num for num in primes]
-        squares = list(filter(lambda num: num < self.upper_bound, squares))
+        squares = [x for x in squares if self.bounds_check(x)]
 
         cubes = [p * psquare for p, psquare in zip(primes, squares)]
-        cubes = list(filter(lambda num: num < self.upper_bound, cubes))
+        cubes = [x for x in cubes if self.bounds_check(x)]
 
         fourth_powers = [num * num for num in squares]
-        fourth_powers = list(filter(lambda num: num < self.upper_bound, fourth_powers))
+        fourth_powers = [x for x in fourth_powers if self.bounds_check(x)]
 
         power_triples = set(fourth_power + cube + square
                             for fourth_power in fourth_powers
@@ -44,6 +44,9 @@ class PrimePowerTriples(object):
                             for square in takewhile(lambda square: (fourth_power + cube + square) < self.upper_bound, squares))
 
         self.power_triple_count = len(power_triples)
+
+    def bounds_check(self, num):
+        return num < self.upper_bound
 
     def get_primes(self):
         primes = [2]
