@@ -27,9 +27,6 @@ class PrimePowerTriples(object):
     def __init__(self, upper_bound):
         self.upper_bound = upper_bound
 
-    def bounds_check(self, num):
-        return num < self.upper_bound
-
     def get_primes(self):
         primes = [2]
 
@@ -45,14 +42,14 @@ class PrimePowerTriples(object):
         primes = self.get_primes()
 
         squares = [x for x in (n * n for n in primes)
-                   if self.bounds_check(x)]
+                   if x < self.upper_bound]
 
         cubes = [x for x in (p * ps for p, ps in zip(primes, squares))
-                 if self.bounds_check(x)]
+                 if x < self.upper_bound]
 
         fourth_powers = (n * n for n in squares)
         fourth_powers = [x for x in fourth_powers
-                         if self.bounds_check(x)]
+                         if x < self.upper_bound]
 
         power_triples = set(fourth_power + cube + square
                             for fourth_power in fourth_powers
