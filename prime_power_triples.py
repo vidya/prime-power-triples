@@ -27,24 +27,6 @@ class PrimePowerTriples(object):
     def __init__(self, upper_bound):
         self.upper_bound = upper_bound
 
-        primes = self.get_primes()
-
-        squares = [num * num for num in primes]
-        squares = [x for x in squares if self.bounds_check(x)]
-
-        cubes = [p * psquare for p, psquare in zip(primes, squares)]
-        cubes = [x for x in cubes if self.bounds_check(x)]
-
-        fourth_powers = [num * num for num in squares]
-        fourth_powers = [x for x in fourth_powers if self.bounds_check(x)]
-
-        power_triples = set(fourth_power + cube + square
-                            for fourth_power in fourth_powers
-                            for cube in takewhile(lambda cube: (fourth_power + cube) < self.upper_bound, cubes)
-                            for square in takewhile(lambda square: (fourth_power + cube + square) < self.upper_bound, squares))
-
-        self.power_triple_count = len(power_triples)
-
     def bounds_check(self, num):
         return num < self.upper_bound
 
@@ -58,6 +40,28 @@ class PrimePowerTriples(object):
                 primes.append(p)
 
         return primes
+
+    def power_triple_count(self):
+        primes = self.get_primes()
+
+        squares = [x for x in (n * n for n in primes)
+                   if self.bounds_check(x)]
+
+        cubes = [x for x in (p * ps for p, ps in zip(primes, squares))
+                 if self.bounds_check(x)]
+
+        fourth_powers = (n * n for n in squares)
+        fourth_powers = [x for x in fourth_powers
+                         if self.bounds_check(x)]
+
+        power_triples = set(fourth_power + cube + square
+                            for fourth_power in fourth_powers
+                            for cube in [cube for cube in cubes
+                                         if (fourth_power + cube) < self.upper_bound]
+                            for square in [square for square in squares
+                                           if (fourth_power + cube + square) < self.upper_bound])
+
+        return len(power_triples)
 
 
 def time_it(func):
