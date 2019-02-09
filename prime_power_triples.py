@@ -33,9 +33,9 @@ class PrimePowerTriples(object):
     def get_primes(self):
         primes = [2]
 
-        num_max = int(sqrt(self.upper_bound)) + 1
+        factor_limit = int(sqrt(self.upper_bound)) + 1
 
-        for p in range(3, num_max, 2):
+        for p in range(3, factor_limit, 2):
             if all((p % x for x in primes)):
                 primes.append(p)
 
