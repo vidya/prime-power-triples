@@ -17,7 +17,6 @@
 # Answer: 1097343
 
 from math import sqrt
-from itertools import takewhile
 
 from functools import wraps
 from time import time
