@@ -1,20 +1,20 @@
-# https://projecteuler.net/problem=87
-#
-# Prime power triples
-# Problem 87
-# The smallest number expressible as the sum of a prime square, prime cube,
-# and prime fourth power is 28. In fact, there are exactly four numbers below
-# fifty that can be expressed in such a way:
-#
-# 28 = 2^2 + 2^3 + 2^4
-# 33 = 3^2 + 2^3 + 2^4
-# 49 = 5^2 + 2^3 + 2^4
-# 47 = 2^2 + 3^3 + 2^4
-#
-# How many numbers below fifty million can be expressed as the sum of a prime
-# square, prime cube, and prime fourth power?
+"""
+https://projecteuler.net/problem=87
 
-# Answer: 1097343
+Prime power triples
+Problem 87
+The smallest number expressible as the sum of a prime square, prime cube,
+and prime fourth power is 28. In fact, there are exactly four numbers below
+fifty that can be expressed in such a way:
+
+28 = 2^2 + 2^3 + 2^4
+33 = 3^2 + 2^3 + 2^4
+49 = 5^2 + 2^3 + 2^4
+47 = 2^2 + 3^3 + 2^4
+
+How many numbers below fifty million can be expressed as the sum of a prime
+square, prime cube, and prime fourth power?
+"""
 
 from math import sqrt
 
@@ -78,7 +78,3 @@ def prime_power_triples_count():
 
     return PrimePowerTriples(fifty_million).power_triple_count
 
-
-# main()
-# answer, time_taken = prime_power_triples_count()
-# print('(answer, time_taken): ({0}, {1})'.format(answer, time_taken))
