@@ -46,8 +46,7 @@ class PrimePowerTriples(object):
         cubes = [x for x in (p * ps for p, ps in zip(primes, squares))
                  if x < self.upper_bound]
 
-        fourth_powers = (n * n for n in squares)
-        fourth_powers = [x for x in fourth_powers
+        fourth_powers = [x for x in (n * n for n in squares)
                          if x < self.upper_bound]
 
         power_triples = set(fourth_power + cube + square
